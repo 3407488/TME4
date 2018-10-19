@@ -22,6 +22,13 @@ namespace pr {
 		void start(int nbThread);
 
 		void submit(Job *job);
+
+		void stop();
+
+		void takeAndExecuteJob();
+
+		friend void takeJobAndExecute(const Pool& pool);
 	};
 
+	void takeJobAndExecute(const Pool& pool);
 }

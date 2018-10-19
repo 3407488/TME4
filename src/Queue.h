@@ -19,15 +19,16 @@ namespace pr {
 		const size_t m_maxsize;
 		size_t m_begin;
 		size_t m_size;
+		bool m_isBlocking;
 
 	public:
-		Queue(size_t maxsize) : m_maxsize(maxsize), m_begin(0), m_size(0) {
+		Queue(size_t maxsize) : m_maxsize(maxsize), m_begin(0), m_size(0), m_isBlocking(true) {
 			m_tab = new T*[maxsize];
 			memset(m_tab, 0, maxsize * sizeof(T*));
 		}
 
 		virtual ~Queue() {
-			std::lock_guard<std::recursive_mutex> lg(m_mutex);
+			std::unique_lock<std::recursive_mutex> lock(m_mutex);
 			for (size_t i = 0; i < m_size; i++) {
 				auto ind = (m_begin + i) % m_maxsize;
 				delete m_tab[ind];
@@ -42,7 +43,10 @@ namespace pr {
 		T* pop() {
 			std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-			m_conditionPop.wait(lock, [] {return !empty()});
+			if (m_isBlocking) {
+				while (!empty() && m_isBlocking)
+					m_conditionPop.wait(lock);
+			}
 
 			if (!empty()) {
 				auto ret = m_tab[m_begin];
@@ -62,7 +66,9 @@ namespace pr {
 		bool push(T* elt) {
 			std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
-			m_conditionPush.wait(lock, [] {return !full()});
+			while (!full()) {
+				m_conditionPush.wait(lock);
+			}
 
 			if (!full && elt != nullptr) {
 				m_tab[(m_begin + m_size) % m_maxsize] = elt;
@@ -77,13 +83,24 @@ namespace pr {
 				return false;
 		}
 
+		void setBlockingPop(bool isBlocking) {
+			std::unique_lock<std::recursive_mutex> lock(m_mutex);
+			m_isBlocking = isBlocking;
+
+			if (m_isBlocking) {
+				lock.unlock();
+
+				m_conditionPop.notify_all();
+			}
+		}
+
 		bool full() const {
-			std::lock_guard<std::recursive_mutex> lg(m_mutex);
+			std::unique_lock<std::recursive_mutex> lock(m_mutex);
 			return m_size == m_maxsize;
 		}
 
 		bool empty() const {
-			std::lock_guard<std::recursive_mutex> lg(m_mutex);
+			std::unique_lock<std::recursive_mutex> lock(m_mutex);
 			return m_szie == 0;
 		}
 	};

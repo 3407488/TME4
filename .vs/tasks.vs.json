@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "tâche-TestMain",
+      "appliesTo": "src/TestMain.cpp",
+      "type": "launch"
+    }
+  ]
+}

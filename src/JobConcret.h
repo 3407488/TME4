@@ -1,5 +1,8 @@
 #pragma once
+
 #include "Job.h"
+
+#include "Barrier.h"
 
 namespace pr {
 
@@ -10,9 +13,10 @@ namespace pr {
 	private:
 		int m_arg;
 		int* m_res;
+		Barrier* m_barrier;
 
 	public:
-		JobConcret(int arg, int* res);
+		JobConcret(int arg, int* res, Barrier* barrier);
 		virtual ~JobConcret();
 
 		virtual void run();

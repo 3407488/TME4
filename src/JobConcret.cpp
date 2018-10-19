@@ -1,11 +1,13 @@
 #include "JobConcret.h"
 
+#include "Barrier.h"
+
 #include <iostream>
 #include <thread>
 
 namespace pr {
 
-	JobConcret::JobConcret(int arg, int* res) : m_arg(arg), m_res(res){}
+	JobConcret::JobConcret(int arg, int* res, Barrier* barrier) : m_arg(arg), m_res(res), m_barrier(barrier){}
 
 
 	JobConcret::~JobConcret(){}
@@ -19,5 +21,6 @@ namespace pr {
 
 		std::cout << "Fini sur args = " << m_arg << " res = " << (*m_res) << std::endl;
 
+		m_barrier->done();
 	}
 }
