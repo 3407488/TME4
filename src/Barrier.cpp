@@ -10,7 +10,7 @@ namespace pr {
 	Barrier::~Barrier() {}
 
 	void Barrier::done() {
-		std::unique_lock<std::recursive_mutex> lock(m_mutex);
+		std::unique_lock<std::mutex> lock(m_mutex);
 
 		m_nbFinish++;
 
@@ -20,13 +20,13 @@ namespace pr {
 	}
 
 	void Barrier::waitFor() {
-		std::unique_lock<std::recursive_mutex> lock(m_mutex);
+		std::unique_lock<std::mutex> lock(m_mutex);
 	
 		while (m_nbFinish < m_nbAttente) {
 			m_condition.wait(lock);
 		}
 
-		std::cout << "Fin du wait for" << endl;
+		std::cout << "Fin du wait for" << std::endl;
 	}
 
 }

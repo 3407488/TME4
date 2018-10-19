@@ -7,7 +7,7 @@ namespace pr {
 	class Barrier {
 
 	private:
-		mutable std::recursive_mutex m_mutex;
+		mutable std::mutex m_mutex;
 
 		std::condition_variable m_condition;
 

@@ -13,11 +13,9 @@ namespace pr {
 
 	void Pool::start(int nbThread) {
 		for (int i = 0; i < nbThread; i++) {
-
-			std::thread t(this->takeAndExecuteJob));
-			m_vector.push_back(t);
-
-			// m_vector.push_back(std::thread(takeJobAndExecute, std::ref(*this));
+			// TODO je vois pas qu'elle fonction il faut passé au thread.
+			//std::thread t();
+			//m_vector.push_back(t);
 		}
 	}
 
@@ -36,7 +34,7 @@ namespace pr {
 				break;
 		}
 
-		std::cout << "Fin du thread = " << std::this_thread << std::endl;
+		std::cout << "Fin du thread = " << std::this_thread::get_id() << std::endl;
 	}
 
 	void Pool::stop() {
@@ -45,22 +43,8 @@ namespace pr {
 
 		for (auto it = m_vector.begin(); it != m_vector.end(); it++) {
 			// On join les threads en cours.
-			std::thread t = *it;
-			t.join();
+			std::thread *t = &(*it);
+			t->join();
 		}
-	}
-
-	 void takeJobAndExecute(const Pool& pool) {
-		while (true) {
-			Job* job = pool.m_queue.pop();
-
-			if (job != nullptr) {
-				job->run();
-			}
-			else
-				break;
-		}
-
-		std::cout << "Fin du thread = " << std::this_thread << std::endl;
 	}
 }

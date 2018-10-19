@@ -1,0 +1,13 @@
+﻿  Pool.cpp
+e:\users\callimard\projets\programmation\git\tme4\src\queue.h(70): error C2664: 'void std::condition_variable::wait(std::unique_lock<std::mutex> &)' : impossible de convertir l'argument 1 de 'std::unique_lock<std::recursive_mutex>' en 'std::unique_lock<std::mutex> &'
+  e:\users\callimard\projets\programmation\git\tme4\src\queue.h(66): note: pendant la compilation de la fonction membre '<Inconnu>' (classe <Inconnu>)
+  e:\users\callimard\projets\programmation\git\tme4\src\pool.cpp(22): note: voir la référence à l'instanciation de la fonction modèle 'bool pr::Queue<pr::Job>::push(T *)' en cours de compilation
+          with
+          [
+              T=pr::Job
+          ]
+  e:\users\callimard\projets\programmation\git\tme4\src\pool.h(15): note: voir la référence à l'instanciation de classe modèle 'pr::Queue<pr::Job>' en cours de compilation
+  Queue.cpp
+  Sphere.cpp
+c1xx : fatal error C1083: Impossible d'ouvrir le fichier source : 'src\Sphere.cpp' : No such file or directory
+  Génération de code en cours...

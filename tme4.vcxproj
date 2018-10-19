@@ -99,13 +99,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Barrier.cpp" />
     <ClCompile Include="src\Color.cpp" />
+    <ClCompile Include="src\Job.cpp" />
+    <ClCompile Include="src\JobConcret.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Pool.cpp" />
+    <ClCompile Include="src\Queue.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
+    <ClCompile Include="src\TestMain.cpp" />
     <ClCompile Include="src\Vec3D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Barrier.h" />
     <ClInclude Include="src\Color.h" />
+    <ClInclude Include="src\Job.h" />
+    <ClInclude Include="src\JobConcret.h" />
+    <ClInclude Include="src\Pool.h" />
+    <ClInclude Include="src\Queue.h" />
     <ClInclude Include="src\Rayon.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Sphere.h" />

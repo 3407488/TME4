@@ -26,9 +26,5 @@ namespace pr {
 		void stop();
 
 		void takeAndExecuteJob();
-
-		friend void takeJobAndExecute(const Pool& pool);
 	};
-
-	void takeJobAndExecute(const Pool& pool);
 }

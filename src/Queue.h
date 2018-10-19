@@ -70,7 +70,7 @@ namespace pr {
 				m_conditionPush.wait(lock);
 			}
 
-			if (!full && elt != nullptr) {
+			if (!full() && elt != nullptr) {
 				m_tab[(m_begin + m_size) % m_maxsize] = elt;
 				m_size++;
 
