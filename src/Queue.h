@@ -10,7 +10,7 @@ namespace pr {
 	{
 
 	private:
-		mutable std::recursive_mutex m_mutex;
+		mutable std::mutex m_mutex;
 
 		std::condition_variable m_conditionPop;
 		std::condition_variable m_conditionPush;
@@ -21,6 +21,16 @@ namespace pr {
 		size_t m_size;
 		bool m_isBlocking;
 
+		bool full() const {
+			std::unique_lock<std::mutex> lock(m_mutex);
+			return m_size == m_maxsize;
+		}
+
+		bool empty() const {
+			std::unique_lock<std::recursive_mutex> lock(m_mutex);
+			return m_size == 0;
+		}
+
 	public:
 		Queue(size_t maxsize) : m_maxsize(maxsize), m_begin(0), m_size(0), m_isBlocking(true) {
 			m_tab = new T*[maxsize];
@@ -28,7 +38,7 @@ namespace pr {
 		}
 
 		virtual ~Queue() {
-			std::unique_lock<std::recursive_mutex> lock(m_mutex);
+			std::unique_lock<std::mutex> lock(m_mutex);
 			for (size_t i = 0; i < m_size; i++) {
 				auto ind = (m_begin + i) % m_maxsize;
 				delete m_tab[ind];
@@ -41,11 +51,11 @@ namespace pr {
 		}
 
 		T* pop() {
-			std::unique_lock<std::recursive_mutex> lock(m_mutex);
+			std::unique_lock<std::mutex> lock(m_mutex);
 
 			if (m_isBlocking) {
-				//m_conditionPop.wait(lock, [this]{return !empty() && m_isBlocking;});
-				while (!empty() && m_isBlocking)
+				//m_conditionPop.wait(lock, [this]{return empty() && m_isBlocking;});
+				while (empty() && m_isBlocking)
 					m_conditionPop.wait(lock);
 			}
 
@@ -68,11 +78,11 @@ namespace pr {
 			if (elt == nullptr)
 			return false;
 
-			std::unique_lock<std::recursive_mutex> lock(m_mutex);
+			std::unique_lock<std::mutex> lock(m_mutex);
 			
-			// m_conditionPush.wait(lock, [this]{return !full();});
+			// m_conditionPush.wait(lock, [this]{return full();});
 
-			while (!full()) {
+			while (full()) {
 				m_conditionPush.wait(lock);
 			}
 
@@ -90,7 +100,7 @@ namespace pr {
 		}
 
 		void setBlockingPop(bool isBlocking) {
-			std::unique_lock<std::recursive_mutex> lock(m_mutex);
+			std::unique_lock<std::mutex> lock(m_mutex);
 			m_isBlocking = isBlocking;
 
 			if (m_isBlocking) {
@@ -98,16 +108,6 @@ namespace pr {
 
 				m_conditionPop.notify_all();
 			}
-		}
-
-		bool full() const {
-			std::unique_lock<std::recursive_mutex> lock(m_mutex);
-			return m_size == m_maxsize;
-		}
-
-		bool empty() const {
-			std::unique_lock<std::recursive_mutex> lock(m_mutex);
-			return m_szie == 0;
 		}
 	};
 }
