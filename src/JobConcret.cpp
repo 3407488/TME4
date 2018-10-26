@@ -13,7 +13,7 @@ namespace pr {
 	JobConcret::~JobConcret(){}
 
 	void JobConcret::run() {
-		std::cout << "Début sur agrs = " << m_arg << std::endl;
+		std::cout << "Debut sur agrs = " << m_arg << std::endl;
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 

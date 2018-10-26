@@ -6,16 +6,16 @@
 
 namespace pr {
 
-	Pool::Pool(int queueSize) : m_queue(queueSize){}
+	Pool::Pool(int queueSize) : m_queue(queueSize), m_vector(){}
 
 
 	Pool::~Pool(){}
 
 	void Pool::start(int nbThread) {
+		m_vector.reserve(nbThread);
 		for (int i = 0; i < nbThread; i++) {
-			// TODO je vois pas qu'elle fonction il faut passé au thread.
-			//std::thread t();
-			//m_vector.push_back(t);
+			// TODO je vois pas qu'elle fonction il faut passï¿½ au thread.
+			m_vector.emplace_back(std::thread(threadBody, &m_queue));
 		}
 	}
 
@@ -45,6 +45,14 @@ namespace pr {
 			// On join les threads en cours.
 			std::thread *t = &(*it);
 			t->join();
+		}
+	}
+
+	void threadBody(Queue<Job> *queue) {
+		Job *j = nullptr;
+		while ((j = queue->pop()) == nullptr) {
+			j->run();
+			delete j;
 		}
 	}
 }

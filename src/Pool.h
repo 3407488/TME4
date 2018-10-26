@@ -27,4 +27,6 @@ namespace pr {
 
 		void takeAndExecuteJob();
 	};
+
+	void threadBody(Queue<Job> *queue);
 }

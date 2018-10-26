@@ -108,6 +108,7 @@
     <ClCompile Include="src\Queue.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\TestMain.cpp" />
+    <ClCompile Include="src\testPool.cpp" />
     <ClCompile Include="src\Vec3D.cpp" />
   </ItemGroup>
   <ItemGroup>

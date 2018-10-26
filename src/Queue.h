@@ -44,6 +44,7 @@ namespace pr {
 			std::unique_lock<std::recursive_mutex> lock(m_mutex);
 
 			if (m_isBlocking) {
+				//m_conditionPop.wait(lock, [this]{return !empty() && m_isBlocking;});
 				while (!empty() && m_isBlocking)
 					m_conditionPop.wait(lock);
 			}
@@ -64,7 +65,12 @@ namespace pr {
 		}
 
 		bool push(T* elt) {
+			if (elt == nullptr)
+			return false;
+
 			std::unique_lock<std::recursive_mutex> lock(m_mutex);
+			
+			// m_conditionPush.wait(lock, [this]{return !full();});
 
 			while (!full()) {
 				m_conditionPush.wait(lock);
